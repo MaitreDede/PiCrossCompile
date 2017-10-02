@@ -21,7 +21,8 @@ echo "Enlarging your image"
 dd if=/dev/zero bs=1M count=2048 >> raspbian.img
 ./fdisk.sh ${IMAGE}
 
-LOOP_MAPPER_PATH=/dev/mapper/${LOOP_MAPPER_PATH}$(kpartx -avs posbox.img | tail -n 1 | cut -d ' ' -f 3)
+LOOP_MAPPER_PATH=$(kpartx -avs posbox.img | tail -n 1 | cut -d ' ' -f 3)
+LOOP_MAPPER_PATH=/dev/mapper/${LOOP_MAPPER_PATH}
 sleep 5
 e2fsck -f "${LOOP_MAPPER_PATH}"
 resize2fs "${LOOP_MAPPER_PATH}"
