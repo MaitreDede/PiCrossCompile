@@ -10,5 +10,9 @@ addons:
       - qemu-system-arm
       - zerofree
       - rsync
+  artifacts:
+    debug: true
+    paths:
+      - raspbian.img
 script:
   - sudo ./build.sh
