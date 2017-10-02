@@ -21,8 +21,9 @@ echo "Enlarging your image"
 dd if=/dev/zero bs=1M count=2048 >> raspbian.img
 ./fdisk.sh ${IMAGE}
 
-LOOP_MAPPER_PATH=$(kpartx -avs posbox.img | tail -n 1 | cut -d ' ' -f 3)
+LOOP_MAPPER_PATH=$(kpartx -avs ${IMAGE} | tail -n 1 | cut -d ' ' -f 3)
 LOOP_MAPPER_PATH=/dev/mapper/${LOOP_MAPPER_PATH}
+echo LOOP_MAPPER_PATH=${LOOP_MAPPER_PATH}
 sleep 5
 e2fsck -f "${LOOP_MAPPER_PATH}"
 resize2fs "${LOOP_MAPPER_PATH}"
@@ -35,3 +36,4 @@ umount "${MOUNT_POINT}"
 #Emulation
 wget 'https://github.com/dhruvvyas90/qemu-rpi-kernel/raw/master/kernel-qemu-4.4.13-jessie' -O kernel-qemu
 qemu-system-arm "${QEMU_OPTS[@]}"
+echo Qemu ended
