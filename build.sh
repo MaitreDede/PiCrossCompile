@@ -11,8 +11,8 @@ fi
 IMAGE="${HOME}/raspbian.img"
 MOUNT_POINT="${HOME}/root_mount"
 QEMU_OPTS=(-kernel kernel-qemu -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio -append 'root=/dev/sda2 rootfstype=ext4 rw' -hda ${IMAGE} -net user,hostfwd=tcp::10022-:22,hostfwd=tcp::18069-:8069 -net nic)
-#QEMU_OPTS=${QEMU_OPTS} -nographic
-QEMU_OPTS=${QEMU_OPTS} -curses
+#QEMU_OPTS=(${QEMU_OPTS} -nographic)
+QEMU_OPTS=(${QEMU_OPTS} -curses)
 
 #Raspbian image
 wget 'https://downloads.raspberrypi.org/raspbian_lite_latest' -O raspbian.img.zip
