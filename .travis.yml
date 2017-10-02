@@ -11,4 +11,4 @@ addons:
       - zerofree
       - rsync
 script:
-  - sudo build.sh
+  - sudo ./build.sh
