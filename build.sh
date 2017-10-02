@@ -16,7 +16,7 @@ QEMU_OPTS=(-kernel kernel-qemu -cpu arm1176 -m 256 -M versatilepb -no-reboot -se
 wget 'https://downloads.raspberrypi.org/raspbian_lite_latest' -O raspbian.img.zip
 unzip raspbian.img.zip
 mv *raspbian*.img ${IMAGE}
-rm *raspbian*.img raspbian.img.zip
+rm raspbian.img.zip
 echo "Enlarging your image"
 dd if=/dev/zero bs=1M count=2048 >> raspbian.img
 ./fdisk.sh ${IMAGE}
