@@ -14,7 +14,7 @@ apt-get update
 apt-get -y dist-upgrade
 
 #build tools
-apt-get install -y git build-essential
+apt-get install -y git build-essential rsync 
 
 #gpio
 apt-get install -y pigpio
