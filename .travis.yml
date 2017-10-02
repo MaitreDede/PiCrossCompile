@@ -9,16 +9,16 @@ addons:
       - kpartx
       - qemu-system-arm
       - zerofree
-env:
-  - MOUNT_POINT="${HOME}/root_mount"
-  - QEMU_OPTS=(-kernel kernel-qemu -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio -append 'root=/dev/sda2 rootfstype=ext4 rw' -hda posbox.img -net user,hostfwd=tcp::10022-:22,hostfwd=tcp::18069-:8069 -net nic -nographic)
 install:
 #Download raspbian image
   - wget 'https://downloads.raspberrypi.org/raspbian_lite_latest' -O raspbian.img.zip
   - unzip raspbian.img.zip
   - mv *raspbian*.img raspbian.img
+#image update
+  - export MOUNT_POINT="${HOME}/root_mount"
 #region qemu
   - wget 'https://github.com/dhruvvyas90/qemu-rpi-kernel/raw/master/kernel-qemu-4.4.13-jessie' -O kernel-qemu
+  - export QEMU_OPTS=(-kernel kernel-qemu -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio -append 'root=/dev/sda2 rootfstype=ext4 rw' -hda raspbian.img -net user,hostfwd=tcp::10022-:22,hostfwd=tcp::18069-:8069 -net nic -nographic)
 script:
 #Region enlarge image
   - dd if=/dev/zero bs=1M count=2048 >> raspbian.img
