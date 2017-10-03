@@ -8,17 +8,15 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-source vars.sh
-
 if cat /proc/mounts | grep ${MOUNT_POINT};
 then
     umount "${MOUNT_POINT}"
 fi
-if kpartx -ls ${IMAGE} | grep loop;
+if kpartx -ls ${IMAGE_DEST} | grep loop;
 then
-    kpartx -dvs ${IMAGE}
+    kpartx -dvs ${IMAGE_DEST}
 fi
-if [ -f ${TMPIMAGEDL} ];
+if [ -f ${IMAGE_TMPDL} ];
 then
-    rm ${TMPIMAGEDL}
+    rm ${IMAGE_TMPDL}
 fi

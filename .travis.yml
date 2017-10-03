@@ -10,18 +10,11 @@ addons:
       - qemu-system-arm
       - zerofree
       - rsync
-  # artifacts:
-  #   debug: true
-  #   paths:
-  #     - raspbian.img
-  #     - build-qemu.log
-  #     - build-image.log
-cache:
-  directories:
-    - qemu
-install:
-  # xenial does not seams to have addons/apt
-  # - sudo apt-get install -y kpartx qemu-system-arm zerofree rsync
-  - ./build-qemu.sh
+  artifacts:
+    debug: true
+    paths:
+      - raspbian.img
+      - build-qemu.log
+      - build-image.log
 script:
   - sudo ./build.sh

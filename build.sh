@@ -8,55 +8,61 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-source vars.sh
+require_command () {
+    type "$1" &> /dev/null || { echo "Command $1 is missing. Install it e.g. with 'apt-get install $1'. Aborting." >&2; exit 1; }
+}
 
+IMAGE_SOURCE="https://downloads.raspberrypi.org/raspbian_lite_latest"
+IMAGE_TMPDL=/tmp/raspbian_lite.img.zip
+IMAGE_DEST="raspbian_lite.img"
+MOUNT_POINT="root_mount"
+
+echo ================================================
+echo == Preparing raspbian image
+echo -en 'travis_fold:start:script.prepare_image\\r'
 require_command kpartx
-require_command qemu-system-arm
 require_command zerofree
+source build-image-prepare.sh
+echo -en 'travis_fold:end:script.prepare_image\\r'
+
+echo ================================================
+echo == Preparing emulation with qemu
+echo -en 'travis_fold:start:script.prepare_qemu\\r'
+source build-qemu.sh
+echo QEMU=${QEMU}
+echo QEMU_OPTS=${QEMU_OPTS}
+require_command ${QEMU}
+echo -en 'travis_fold:end:script.prepare_qemu\\r'
 
 #Raspbian image
-wget 'https://downloads.raspberrypi.org/raspbian_lite_latest' -O ${TMPIMAGEDL}
-IMAGEFILE=`unzip -Z1 ${TMPIMAGEDL}`
-echo Decompressing image ${IMAGEFILE} to ${IMAGE}
-unzip -p ${TMPIMAGEDL} ${IMAGEFILE} > ${IMAGE}
-rm ${TMPIMAGEDL}
-echo "Enlarging your image"
-dd if=/dev/zero bs=1M count=2048 >> ${IMAGE}
-./fdisk.sh ${IMAGE}
-
-LOOP_MAPPER_PATH=$(kpartx -avs ${IMAGE} | tail -n 1 | cut -d ' ' -f 3)
-LOOP_MAPPER_PATH=/dev/mapper/${LOOP_MAPPER_PATH}
-echo LOOP_MAPPER_PATH=${LOOP_MAPPER_PATH}
-sleep 5
-e2fsck -f "${LOOP_MAPPER_PATH}"
-resize2fs "${LOOP_MAPPER_PATH}"
-mkdir -p "${MOUNT_POINT}"
-mount "${LOOP_MAPPER_PATH}" "${MOUNT_POINT}"
-sleep 2
-echo "Copying files"
+echo ================================================
+echo == Building image : backup of some original files
+mount_image
 mv ${MOUNT_POINT}/etc/rc.local ${MOUNT_POINT}/etc/rc.local.backup
 mv ${MOUNT_POINT}/etc/ld.so.preload ${MOUNT_POINT}/etc/ld.so.preload.backup
 touch ${MOUNT_POINT}/etc/ld.so.preload
-cp --recursive --verbose pi-stage0/* "${MOUNT_POINT}"
-sync
-umount "${MOUNT_POINT}"
+chmod +x ${MOUNT_POINT}/etc/ld.so.preload
+unmount_image
 
-#Emulation
-wget 'https://github.com/dhruvvyas90/qemu-rpi-kernel/raw/master/kernel-qemu-4.4.13-jessie' -O kernel-qemu
-echo "Qemu options: ${QEMU_OPTS[@]}"
-${HOME}/qemu-bin "${QEMU_OPTS[@]}"
-echo "Qemu ended"
+# cp --recursiœe --verbose pi-stage0/* "${MOUNT_POINT}"
+# sync
+# umount "${MOUNT_POINT}"
 
-#cleanup
-echo "Restoring files"
-mount "${LOOP_MAPPER_PATH}" "${MOUNT_POINT}"
-sleep 2
-rm ${MOUNT_POINT}/etc/rc.local ${MOUNT_POINT}/etc/ld.so.preload
-mv ${MOUNT_POINT}/etc/rc.local.backup ${MOUNT_POINT}/etc/rc.local
-mv ${MOUNT_POINT}/etc/ld.so.preload.backup ${MOUNT_POINT}/etc/ld.so.preload
+# #Emulation
+# echo "Qemu options: ${QEMU_OPTS[@]}"
+#  "${QEMU_OPTS[@]}"
+# echo "Qemu ended"
 
-cp ${MOUNT_POINT}/home/pi/build-image.log .
-sync
-source cleanup.sh
+# #cleanup
+# echo "Restoring files"
+# mount "${LOOP_MAPPER_PATH}" "${MOUNT_POINT}"
+# sleep 2
+# rm ${MOUNT_POINT}/etc/rc.local ${MOUNT_POINT}/etc/ld.so.preload
+# mv ${MOUNT_POINT}/etc/rc.local.backup ${MOUNT_POINT}/etc/rc.local
+# mv ${MOUNT_POINT}/etc/ld.so.preload.backup ${MOUNT_POINT}/etc/ld.so.preload
 
-echo Your image is ready.
+# cp ${MOUNT_POINT}/home/pi/build-image.log .
+# sync
+# source cleanup.sh
+
+# echo Your image is ready.

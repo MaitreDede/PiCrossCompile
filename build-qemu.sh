@@ -3,24 +3,16 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-QEMU_URL=https://download.qemu.org/qemu-2.10.1.tar.xz
-QEMU_TMP=/tmp/qemu.tar.xz
-QEMU_OUT=${HOME}/qemu
-
-CPU_COUNT=$(grep -c ^processor /proc/cpuinfo)
-
-wget ${QEMU_URL} -O ${QEMU_TMP}
-
-mkdir -p ${QEMU_OUT}
-pushd ${QEMU_OUT}
-tar xJf ${QEMU_TMP} --strip-components=1 --overwrite
-rm ${QEMU_TMP}
-
-./configure --target-list=arm-softmmu,arm-linux-user,armeb-linux-user > build-qemu.log
-echo Compiling with ${CPU_COUNT} CPU
-make -j${CPU_COUNT} >> build-qemu.log
-popd
-
-ln -s ${QEMU_OUT}/arm-softmmu/qemu-system-arm ${HOME}/qemu-bin
-${HOME}/qemu-bin --version
-${HOME}/qemu-bin -M help
+case ${QEMU_VERSION} in
+"COMPILED")
+    source build-qemu-compile.sh
+    ;;
+"SYSTEM")
+    source build-qemu-system.sh
+    ;;
+*)
+    echo "WARNING : unspecified or invalid value for QEMU_VERSION. Valid values are COMPILED,SYSTEM. Found '${QEMU_VERSION}'"
+    echo "Assuming default: SYSTEM"
+    source build-qemu-system.sh
+    ;;
+esac
