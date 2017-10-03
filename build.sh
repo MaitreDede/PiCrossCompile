@@ -31,6 +31,8 @@ mount "${LOOP_MAPPER_PATH}" "${MOUNT_POINT}"
 sleep 2
 echo "Copying files"
 mv ${MOUNT_POINT}/etc/rc.local ${MOUNT_POINT}/etc/rc.local.backup
+mv ${MOUNT_POINT}/etc/ld.so.preload ${MOUNT_POINT}/etc/ld.so.preload.backup
+touch ${MOUNT_POINT}/etc/ld.so.preload
 cp --recursive --verbose pi-stage0/* "${MOUNT_POINT}"
 umount "${MOUNT_POINT}"
 
@@ -39,12 +41,15 @@ wget 'https://github.com/dhruvvyas90/qemu-rpi-kernel/raw/master/kernel-qemu-4.4.
 qemu-system-arm "${QEMU_OPTS[@]}"
 echo Qemu ended
 
+echo "Restoring files"
 mount "${LOOP_MAPPER_PATH}" "${MOUNT_POINT}"
 sleep 2
-rm ${MOUNT_POINT}/etc/rc.local
+rm ${MOUNT_POINT}/etc/rc.local ${MOUNT_POINT}/etc/ld.so.preload
 mv ${MOUNT_POINT}/etc/rc.local.backup ${MOUNT_POINT}/etc/rc.local
+mv ${MOUNT_POINT}/etc/ld.so.preload.backup ${MOUNT_POINT}/etc/ld.so.preload
+
 cp ${MOUNT_POINT}/home/pi/build-image.log .
 
 source cleanup.sh
 
-cat build-image.log
+echo Your image is ready.

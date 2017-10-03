@@ -1,6 +1,6 @@
 {
     "gpu_mem": 256,
     "do_serial": 1,
-    "passwd": "raspberry",
+    "passwd": "raspi",
     "reboot": 0
 }

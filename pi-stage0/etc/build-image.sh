@@ -84,7 +84,7 @@ systemctl daemon-reload
 systemctl enable ssh
 
 # done
-if [ $UNMOUNTBOOT = 1 ]
+if [ "$UNMOUNTBOOT" = "1" ]
 then
     echo Unmounting /boot
     umount /dev/sda1
@@ -92,7 +92,7 @@ else
     echo No need to unmount /boot
 fi
 
-if [ $DO_REBOOT = 0 ]
+if [ "$DO_REBOOT" = "0" ]
 then
     echo "Not rebooting..."
 else
