@@ -21,4 +21,4 @@ echo Compiling with ${CPU_COUNT} CPU
 make -j${CPU_COUNT}
 popd
 
-export QEMU=${QEMU_OUT}/arm-softmmu/qemu-system-arm
+ln -s ${QEMU_OUT}/arm-softmmu/qemu-system-arm ${HOME}/qemu-bin
