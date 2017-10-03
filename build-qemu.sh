@@ -5,9 +5,11 @@ set -o pipefail
 
 case ${QEMU_VERSION} in
 "COMPILED")
+    echo "Compiling latest qemu"
     source build-qemu-compile.sh
     ;;
 "SYSTEM")
+    echo "Using system qemu"
     source build-qemu-system.sh
     ;;
 *)

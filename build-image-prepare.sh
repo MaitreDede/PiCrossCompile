@@ -15,7 +15,18 @@ unzip -p ${IMAGE_TMPDL} ${IMAGEFILE} > ${IMAGE_DEST}
 rm ${IMAGE_TMPDL}
 echo "Enlarging your image"
 dd if=/dev/zero bs=1M count=2048 >> ${IMAGE_DEST}
-./fdisk.sh ${IMAGE_DEST}
+echo "Fdisking ${IMAGE_DEST}"
+START_OF_ROOT_PARTITION=$(fdisk -l ${IMAGE_DEST} | tail -n 1 | awk '{print $2}')
+(echo 'p';                          # print
+ echo 'd';                          # delete
+ echo '2';                          #   second partition
+ echo 'n';                          # create new partition
+ echo 'p';                          #   primary
+ echo '2';                          #   number 2
+ echo "${START_OF_ROOT_PARTITION}"; #   starting at previous offset
+ echo '';                           #   ending at default (fdisk should propose max)
+ echo 'p';                          # print
+ echo 'w') | fdisk ${IMAGE_DEST}       # write and quit
 
 LOOP_MAPPER_PATH=$(kpartx -avs ${IMAGE_DEST} | tail -n 1 | cut -d ' ' -f 3)
 LOOP_MAPPER_PATH=/dev/mapper/${LOOP_MAPPER_PATH}
