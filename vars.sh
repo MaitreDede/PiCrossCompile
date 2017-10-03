@@ -20,3 +20,4 @@ QEMU_OPTS=(-kernel kernel-qemu -cpu arm1176 -m 256 -M versatilepb -no-reboot -se
 if [ -z ${DISPLAY:-} ] ; then
     QEMU_OPTS+=(-nographic)
 fi
+QEMU=${HOME}/qemu-bin

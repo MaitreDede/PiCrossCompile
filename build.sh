@@ -44,8 +44,8 @@ umount "${MOUNT_POINT}"
 
 #Emulation
 wget 'https://github.com/dhruvvyas90/qemu-rpi-kernel/raw/master/kernel-qemu-4.4.13-jessie' -O kernel-qemu
-qemu-system-arm "${QEMU_OPTS[@]}"
-echo Qemu ended
+${QEMU} "${QEMU_OPTS[@]}"
+echo "Qemu ended"
 
 #cleanup
 echo "Restoring files"
