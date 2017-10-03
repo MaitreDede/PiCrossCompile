@@ -63,18 +63,20 @@ apt-get clean
 
 #Raspberry pi configuration
 PICONF=/etc/build-image.json
+DO_REBOOT=1
 if [ -f $PICONF ]
 then
     echo "Configuring the pi..."
     GPU_MEM=$(jq ".gpu_mem" $PICONF)
     SERIAL=$(jq ".do_serial" $PICONF)
     PASSWD=$(jq ".passwd" $PICONF)
+    DO_REBOOT$(jq ".reboot" $PICONF)
 
     # raspi-config nonint do_memory_split 256
     set_config_var gpu_mem $GPU_MEM $CONFIG
     raspi-config nonint do_serial 1
 
-    (echo $PASSWD; echo $PASSWD; echo $PASSWD) | passwd pi
+    (echo "raspberry"; echo $PASSWD; echo $PASSWD) | passwd pi
 fi
 
 #services
@@ -82,11 +84,17 @@ systemctl daemon-reload
 systemctl enable ssh
 
 # done
-if [UNMOUNTBOOT = 1]
+if [ $UNMOUNTBOOT = 1 ]
 then
     echo Unmounting /boot
     umount /dev/sda1
 else
     echo No need to unmount /boot
 fi
-reboot
+
+if [ $DO_REBOOT = 0 ]
+then
+    echo "Not rebooting..."
+else
+    reboot
+fi

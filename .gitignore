@@ -1,3 +1,8 @@
+#qemu kernel
 kernel-qemu
-raspbian_lite.img
+# mount point
 root_mount/
+# result log
+build-image.log
+# result image
+raspbian_lite.img
