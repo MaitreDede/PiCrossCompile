@@ -34,6 +34,7 @@ mv ${MOUNT_POINT}/etc/rc.local ${MOUNT_POINT}/etc/rc.local.backup
 mv ${MOUNT_POINT}/etc/ld.so.preload ${MOUNT_POINT}/etc/ld.so.preload.backup
 touch ${MOUNT_POINT}/etc/ld.so.preload
 cp --recursive --verbose pi-stage0/* "${MOUNT_POINT}"
+sync
 umount "${MOUNT_POINT}"
 
 #Emulation
@@ -49,7 +50,7 @@ mv ${MOUNT_POINT}/etc/rc.local.backup ${MOUNT_POINT}/etc/rc.local
 mv ${MOUNT_POINT}/etc/ld.so.preload.backup ${MOUNT_POINT}/etc/ld.so.preload
 
 cp ${MOUNT_POINT}/home/pi/build-image.log .
-
+sync
 source cleanup.sh
 
 echo Your image is ready.
