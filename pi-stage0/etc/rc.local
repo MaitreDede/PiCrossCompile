@@ -17,6 +17,6 @@ if [ "$_IP" ]; then
   printf "My IP address is %s\n" "$_IP"
 fi
 
-/etc/magic.sh 2>&1 | tee /home/pi/init_magic.log
+/etc/build-image.sh 2>&1 | tee /home/pi/build-image.log
 
 exit 0

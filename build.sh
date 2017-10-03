@@ -8,14 +8,7 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-TMPIMAGEDL=/tmp/raspbian_lite.img.zip
-#IMAGE="${HOME}/raspbian_lite.img"
-IMAGE="raspbian_lite.img"
-#MOUNT_POINT="${HOME}/root_mount"
-MOUNT_POINT="root_mount"
-#QEMU_OPTS=(-kernel kernel-qemu -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio -append 'root=/dev/sda2 rootfstype=ext4 rw' -hda ${IMAGE} -net user,hostfwd=tcp::10022-:22,hostfwd=tcp::18069-:8069 -net nic -nographic)
-#QEMU_OPTS=(-kernel kernel-qemu -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio -append 'root=/dev/sda2 rootfstype=ext4 rw' -hda ${IMAGE} -net user,hostfwd=tcp::10022-:22,hostfwd=tcp::18069-:8069 -net nic -curses)
-QEMU_OPTS=(-kernel kernel-qemu -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio -append 'root=/dev/sda2 rootfstype=ext4 rw' -hda ${IMAGE} -net user,hostfwd=tcp::10022-:22,hostfwd=tcp::18069-:8069 -net nic)
+source vars.sh
 
 #Raspbian image
 wget 'https://downloads.raspberrypi.org/raspbian_lite_latest' -O ${TMPIMAGEDL}
@@ -36,10 +29,22 @@ resize2fs "${LOOP_MAPPER_PATH}"
 mkdir -p "${MOUNT_POINT}"
 mount "${LOOP_MAPPER_PATH}" "${MOUNT_POINT}"
 sleep 2
-# cp -a pi-stage0 "${MOUNT_POINT}"
-# umount "${MOUNT_POINT}"
+echo "Copying files"
+mv ${MOUNT_POINT}/etc/rc.local ${MOUNT_POINT}/etc/rc.local.backup
+cp --recursive --verbose pi-stage0/* "${MOUNT_POINT}"
+umount "${MOUNT_POINT}"
 
-# #Emulation
-# wget 'https://github.com/dhruvvyas90/qemu-rpi-kernel/raw/master/kernel-qemu-4.4.13-jessie' -O kernel-qemu
-# qemu-system-arm "${QEMU_OPTS[@]}"
-# echo Qemu ended
+#Emulation
+wget 'https://github.com/dhruvvyas90/qemu-rpi-kernel/raw/master/kernel-qemu-4.4.13-jessie' -O kernel-qemu
+qemu-system-arm "${QEMU_OPTS[@]}"
+echo Qemu ended
+
+mount "${LOOP_MAPPER_PATH}" "${MOUNT_POINT}"
+sleep 2
+rm ${MOUNT_POINT}/etc/rc.local
+mv ${MOUNT_POINT}/etc/rc.local.backup ${MOUNT_POINT}/etc/rc.local
+cp ${MOUNT_POINT}/home/pi/build-image.log .
+
+source cleanup.sh
+
+cat build-image.log
