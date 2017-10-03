@@ -10,6 +10,11 @@ fi
 
 source vars.sh
 
+require_command kpartx
+require_command qemu-system-arm
+require_command zerofree
+
+
 #Raspbian image
 wget 'https://downloads.raspberrypi.org/raspbian_lite_latest' -O ${TMPIMAGEDL}
 IMAGEFILE=`unzip -Z1 ${TMPIMAGEDL}`
@@ -42,6 +47,7 @@ wget 'https://github.com/dhruvvyas90/qemu-rpi-kernel/raw/master/kernel-qemu-4.4.
 qemu-system-arm "${QEMU_OPTS[@]}"
 echo Qemu ended
 
+#cleanup
 echo "Restoring files"
 mount "${LOOP_MAPPER_PATH}" "${MOUNT_POINT}"
 sleep 2

@@ -1,5 +1,5 @@
 language: csharp
-dist: xenial
+dist: trusty
 sudo: required
 mono: none
 dotnet: 2.0.0
@@ -16,6 +16,7 @@ addons:
       - raspbian.img
 install:
   # xenial does not seams to have addons/apt
-  - sudo apt-get install -y kpartx qemu-system-arm zerofree rsync
+  # - sudo apt-get install -y kpartx qemu-system-arm zerofree rsync
+  - qemu-system-arm --version
 script:
   - sudo ./build.sh
