@@ -3,6 +3,6 @@ kernel-qemu
 # mount point
 root_mount/
 # result log
-build-image.log
+build-*.log
 # result image
 raspbian_lite.img

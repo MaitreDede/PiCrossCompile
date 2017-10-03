@@ -14,7 +14,6 @@ require_command kpartx
 require_command qemu-system-arm
 require_command zerofree
 
-
 #Raspbian image
 wget 'https://downloads.raspberrypi.org/raspbian_lite_latest' -O ${TMPIMAGEDL}
 IMAGEFILE=`unzip -Z1 ${TMPIMAGEDL}`
@@ -44,6 +43,7 @@ umount "${MOUNT_POINT}"
 
 #Emulation
 wget 'https://github.com/dhruvvyas90/qemu-rpi-kernel/raw/master/kernel-qemu-4.4.13-jessie' -O kernel-qemu
+echo "Qemu options: ${QEMU_OPTS[@]}"
 ${QEMU} "${QEMU_OPTS[@]}"
 echo "Qemu ended"
 

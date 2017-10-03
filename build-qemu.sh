@@ -16,9 +16,11 @@ pushd ${QEMU_OUT}
 tar xJf ${QEMU_TMP} --strip-components=1 --overwrite
 rm ${QEMU_TMP}
 
-./configure --target-list=arm-softmmu,arm-linux-user,armeb-linux-user
+./configure --target-list=arm-softmmu,arm-linux-user,armeb-linux-user > build-qemu.log
 echo Compiling with ${CPU_COUNT} CPU
-make -j${CPU_COUNT}
+make -j${CPU_COUNT} >> build-qemu.log
 popd
 
 ln -s ${QEMU_OUT}/arm-softmmu/qemu-system-arm ${HOME}/qemu-bin
+${HOME}/qemu-bin --version
+${HOME}/qemu-bin -M help

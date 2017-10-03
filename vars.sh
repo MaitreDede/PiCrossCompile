@@ -16,8 +16,11 @@ TMPIMAGEDL=/tmp/raspbian_lite.img.zip
 IMAGE="raspbian_lite.img"
 MOUNT_POINT="root_mount"
 # QEMU_OPTS=(-kernel kernel-qemu -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio -append 'root=/dev/sda2 rootfstype=ext4 console=ttyAMA0 rw' -hda ${IMAGE} -net user,hostfwd=tcp::10022-:22,hostfwd=tcp::18069-:8069 -net nic)
-QEMU_OPTS=(-kernel kernel-qemu -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio -append 'root=/dev/mmcblk0p2 earlyprintk rootfstype=ext4 console=ttyAMA0 rw' -drive file=${IMAGE},format=raw -net user,hostfwd=tcp::10022-:22,hostfwd=tcp::18069-:8069 -net nic)
+# QEMU_OPTS=(-kernel kernel-qemu -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio -append 'root=/dev/mmcblk0p2 earlyprintk rootfstype=ext4 console=ttyAMA0 rw' -drive file=${IMAGE},format=raw -net user,hostfwd=tcp::10022-:22,hostfwd=tcp::18069-:8069 -net nic)
+# if [ -z ${DISPLAY:-} ] ; then
+#     QEMU_OPTS+=(-nographic)
+# fi
+QEMU_OPTS=(-kernel kernel-qemu -m 256 -M raspi2 -no-reboot -serial stdio -append 'root=/dev/mmcblk0p2 earlyprintk rootfstype=ext4 console=ttyAMA0 rw' -drive file=${IMAGE},format=raw -net user,hostfwd=tcp::10022-:22,hostfwd=tcp::18069-:8069 -net nic)
 if [ -z ${DISPLAY:-} ] ; then
-    QEMU_OPTS+=(-nographic)
+    QEMU_OPTS+=(-nographic -monitor none)
 fi
-QEMU=${HOME}/qemu-bin
