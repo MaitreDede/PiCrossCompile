@@ -14,9 +14,14 @@ addons:
     debug: true
     paths:
       - raspbian.img
+cache:
+  directories:
+    - qemu
 install:
   # xenial does not seams to have addons/apt
   # - sudo apt-get install -y kpartx qemu-system-arm zerofree rsync
+  - ./build-qemu.sh
   - qemu-system-arm --version
+  - ${QEMU} --version
 script:
   - sudo ./build.sh
