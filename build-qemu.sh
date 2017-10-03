@@ -11,7 +11,7 @@ wget ${QEMU_URL} -O ${QEMU_TMP}
 
 mkdir -p ${QEMU_OUT}
 pushd ${QEMU_OUT}
-tar xvJf --overwrite ${QEMU_TMP} --strip-components=1
+tar xvJf ${QEMU_TMP} --strip-components=1 --overwrite
 rm ${QEMU_URL}
 
 ./configure
