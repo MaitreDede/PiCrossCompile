@@ -49,6 +49,7 @@ echo == Building image : stage 0
 mount_image
 cp --recursive --verbose pi-stage0/* "${MOUNT_POINT}"
 unmount_image
+echo ${QEMU} ${QEMU_OPTS[@]}
 ${QEMU} ${QEMU_OPTS[@]}
 
 echo ================================================
