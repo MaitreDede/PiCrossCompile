@@ -24,4 +24,6 @@ echo -en 'travis_fold:start:script.qemu-version\\r\\n'
 echo qemu informations
 ${QEMU} --version
 ${QEMU} -M help
+echo Supported cpu for ${QEMU_MACHINE} :
+${QEMU} -M ${QEMU_MACHINE} -cpu help
 echo -en 'travis_fold:end:script.qemu-version\\r\\n'
