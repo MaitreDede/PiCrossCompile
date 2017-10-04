@@ -20,3 +20,8 @@ else
         source build-qemu-system.sh
     fi
 fi
+echo -en 'travis_fold:start:script.qemu-version\\r\\n'
+echo qemu informations
+${QEMU} --version
+${QEMU} -M help
+echo -en 'travis_fold:end:script.qemu-version\\r\\n'
