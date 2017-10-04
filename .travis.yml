@@ -3,6 +3,7 @@ dist: trusty
 sudo: required
 mono: none
 dotnet: 2.0.0
+dist: xenial
 addons:
   apt:
     packages:
@@ -16,5 +17,8 @@ addons:
   #     - raspbian.img
   #     - build-qemu.log
   #     - build-image.log
+install:
+  - sudo apt-get update
+  - sudo apt-get install -y kpartx qemu-system-arm zerofree rsync
 script:
   - ./build.sh
