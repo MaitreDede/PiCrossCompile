@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
 
+if [ -z ${QEMU_VERSION:-} ]
+then
+    QEMU_VERSION=
+fi
+
 if [ "${QEMU_VERSION}" = "COMPILED" ]
 then
     echo "Compiling latest qemu"
     source build-qemu-compile.sh
 else
     if [ "${QEMU_VERSION}" = "SYSTEM" ]
+    then
         echo "Using system qemu"
         source build-qemu-system.sh
     else

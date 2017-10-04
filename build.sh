@@ -18,14 +18,6 @@ IMAGE_DEST="raspbian_lite.img"
 MOUNT_POINT="root_mount"
 
 echo ================================================
-echo == Preparing raspbian image
-echo -en 'travis_fold:start:script.prepare_image\\r'
-require_command kpartx
-require_command zerofree
-source build-image-prepare.sh
-echo -en 'travis_fold:end:script.prepare_image\\r'
-
-echo ================================================
 echo == Preparing emulation with qemu
 echo -en 'travis_fold:start:script.prepare_qemu\\r'
 source build-qemu.sh
@@ -33,6 +25,14 @@ echo QEMU=${QEMU}
 echo QEMU_OPTS=${QEMU_OPTS}
 require_command ${QEMU}
 echo -en 'travis_fold:end:script.prepare_qemu\\r'
+
+echo ================================================
+echo == Preparing raspbian image
+echo -en 'travis_fold:start:script.prepare_image\\r'
+require_command kpartx
+require_command zerofree
+source build-image-prepare.sh
+echo -en 'travis_fold:end:script.prepare_image\\r'
 
 #Raspbian image
 echo ================================================
