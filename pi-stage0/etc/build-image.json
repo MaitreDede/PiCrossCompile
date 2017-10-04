@@ -2,5 +2,5 @@
     "gpu_mem": 256,
     "do_serial": 1,
     "passwd": "raspi",
-    "reboot": 0
+    "reboot": 1
 }

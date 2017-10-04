@@ -70,13 +70,13 @@ then
     GPU_MEM=$(jq ".gpu_mem" $PICONF)
     SERIAL=$(jq ".do_serial" $PICONF)
     PASSWD=$(jq ".passwd" $PICONF)
-    DO_REBOOT$(jq ".reboot" $PICONF)
+    DO_REBOOT=$(jq ".reboot" $PICONF)
 
     # raspi-config nonint do_memory_split 256
     set_config_var gpu_mem $GPU_MEM $CONFIG
     raspi-config nonint do_serial 1
 
-    (echo "raspberry"; echo $PASSWD; echo $PASSWD) | passwd pi
+    (echo $PASSWD; echo $PASSWD) | passwd pi
 fi
 
 #services

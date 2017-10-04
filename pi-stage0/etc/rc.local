@@ -14,7 +14,7 @@
 # Print the IP address
 _IP=$(hostname -I) || true
 if [ "$_IP" ]; then
-  printf "My IP address is %s\n" "$_IP"
+  printf "Hello from the pi, my IP address is %s\n" "$_IP"
 fi
 
 /etc/build-image.sh 2>&1 | tee /home/pi/build-image.log

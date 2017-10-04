@@ -17,4 +17,4 @@ addons:
   #     - build-qemu.log
   #     - build-image.log
 script:
-  - sudo ./build.sh
+  - ./build.sh
