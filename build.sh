@@ -12,7 +12,7 @@ set -o pipefail
 #     type "$1" &> /dev/null || { echo "Command $1 is missing. Install it e.g. with 'apt-get install $1'. Aborting." >&2; exit 1; }
 # }
 
-IMAGE_SOURCE="https://downloads.raspberrypi.org/raspbian_lite_latest"
+IMAGE_SOURCE="http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2017-07-05/2017-07-05-raspbian-jessie-lite.zip"
 IMAGE_TMPDL=/tmp/raspbian_lite.img.zip
 IMAGE_DEST="raspbian_lite.img"
 MOUNT_POINT="root_mount"
