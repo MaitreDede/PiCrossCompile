@@ -19,20 +19,20 @@ MOUNT_POINT="root_mount"
 
 echo ================================================
 echo == Preparing emulation with qemu
-echo -en 'travis_fold:start:script.prepare_qemu\\r'
+echo -en 'travis_fold:start:script.prepare_qemu\\r\\n'
 source build-qemu.sh
 echo QEMU=${QEMU}
 echo QEMU_OPTS=${QEMU_OPTS}
 require_command ${QEMU}
-echo -en 'travis_fold:end:script.prepare_qemu\\r'
+echo -en 'travis_fold:end:script.prepare_qemu\\r\\n'
 
 echo ================================================
 echo == Preparing raspbian image
-echo -en 'travis_fold:start:script.prepare_image\\r'
+echo -en 'travis_fold:start:script.prepare_image\\r\\n'
 require_command kpartx
 require_command zerofree
 source build-image-prepare.sh
-echo -en 'travis_fold:end:script.prepare_image\\r'
+echo -en 'travis_fold:end:script.prepare_image\\r\\n'
 
 #Raspbian image
 echo ================================================
@@ -44,22 +44,20 @@ touch ${MOUNT_POINT}/etc/ld.so.preload
 chmod +x ${MOUNT_POINT}/etc/ld.so.preload
 unmount_image
 
-# cp --recursiœe --verbose pi-stage0/* "${MOUNT_POINT}"
-# sync
-# umount "${MOUNT_POINT}"
+echo ================================================
+echo == Building image : stage 0
+mount_image
+cp --recursive --verbose pi-stage0/* "${MOUNT_POINT}"
+unmount_image
+${QEMU} ${QEMU_OPTS[@]}
 
-# #Emulation
-# echo "Qemu options: ${QEMU_OPTS[@]}"
-#  "${QEMU_OPTS[@]}"
-# echo "Qemu ended"
-
-# #cleanup
-# echo "Restoring files"
-# mount "${LOOP_MAPPER_PATH}" "${MOUNT_POINT}"
-# sleep 2
-# rm ${MOUNT_POINT}/etc/rc.local ${MOUNT_POINT}/etc/ld.so.preload
-# mv ${MOUNT_POINT}/etc/rc.local.backup ${MOUNT_POINT}/etc/rc.local
-# mv ${MOUNT_POINT}/etc/ld.so.preload.backup ${MOUNT_POINT}/etc/ld.so.preload
+echo ================================================
+echo == Building image : restoring original files
+mount_image
+rm ${MOUNT_POINT}/etc/rc.local ${MOUNT_POINT}/etc/ld.so.preload
+mv ${MOUNT_POINT}/etc/rc.local.backup ${MOUNT_POINT}/etc/rc.local
+mv ${MOUNT_POINT}/etc/ld.so.preload.backup ${MOUNT_POINT}/etc/ld.so.preload
+unmount_image
 
 # cp ${MOUNT_POINT}/home/pi/build-image.log .
 # sync
