@@ -16,11 +16,3 @@ if kpartx -ls ${IMAGE_DEST} | grep loop;
 then
     kpartx -dvs ${IMAGE_DEST}
 fi
-if [ -f ${IMAGE_TMPDL} ];
-then
-    rm ${IMAGE_TMPDL}
-fi
-if [ -f ${QEMU_KERNEL} ]
-then
-    rm ${QEMU_KERNEL}
-fi

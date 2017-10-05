@@ -3,11 +3,8 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-wget ${IMAGE_SOURCE} -O ${IMAGE_TMPDL}
-IMAGEFILE=`unzip -Z1 ${IMAGE_TMPDL}`
-echo Decompressing image ${IMAGEFILE} to ${IMAGE_DEST}
-unzip -p ${IMAGE_TMPDL} ${IMAGEFILE} > ${IMAGE_DEST}
-rm ${IMAGE_TMPDL}
+cp --verbose ${IMAGE_PRISTINE} ${IMAGE_DEST}
+
 echo "Enlarging your image"
 dd if=/dev/zero bs=1M count=2048 >> ${IMAGE_DEST}
 echo "Fdisking ${IMAGE_DEST}"

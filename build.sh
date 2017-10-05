@@ -8,13 +8,6 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-# require_command () {
-#     type "$1" &> /dev/null || { echo "Command $1 is missing. Install it e.g. with 'apt-get install $1'. Aborting." >&2; exit 1; }
-# }
-
-IMAGE_SOURCE="https://downloads.raspberrypi.org/raspbian_lite_latest"
-IMAGE_TMPDL=/tmp/raspbian_lite.img.zip
-IMAGE_DEST="raspbian_lite.img"
 MOUNT_POINT="root_mount"
 
 echo ================================================
@@ -22,12 +15,6 @@ echo == Preparing raspbian image
 echo -en 'travis_fold:start:script.prepare_image\\r\\n'
 source build-image-prepare.sh
 echo -en 'travis_fold:end:script.prepare_image\\r\\n'
-
-echo ================================================
-echo == Preparing emulation with qemu
-echo -en 'travis_fold:start:script.prepare_qemu\\r\\n'
-source build-qemu.sh
-echo -en 'travis_fold:end:script.prepare_qemu\\r\\n'
 
 echo ================================================
 echo == Building image : backup of some original files
