@@ -7,7 +7,9 @@ before_install:
   - sudo apt-get update
   - sudo apt-key update
   - sudo apt-get -qqy -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install docker-engine
-  - docker -v
+  - docker --version
+  - docker --help
+  - docker run --help
 script:
   - docker build . --tag="maitredede/qemupi"
-  - docker run --rm -it --privileged --mount type=bind,source="$(pwd)",target=/data -w /data "maitredede/qemupi" "build.sh"
+  - docker run --rm -it --privileged --volume "$(pwd)":/data -w /data "maitredede/qemupi" "build.sh"
