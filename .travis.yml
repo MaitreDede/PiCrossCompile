@@ -1,20 +1,6 @@
-language: csharp
-dist: trusty
 sudo: required
-mono: none
-dotnet: 2.0.0
-addons:
-  apt:
-    packages:
-      - kpartx
-      - qemu-system-arm
-      - zerofree
-      - rsync
-  # artifacts:
-  #   debug: true
-  #   paths:
-  #     - raspbian.img
-  #     - build-qemu.log
-  #     - build-image.log
+services:
+  - docker
 script:
-  - ./build.sh
+  - docker build . --tag="maitredede/qemupi"
+  - docker run --rm -it --privileged --mount type=bind,source="$(pwd)",target=/data -w /data "maitredede/qemupi" "build.sh"

@@ -3,10 +3,10 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-# if [[ $EUID -ne 0 ]]; then
-#    echo "This script must be run as root" 
-#    exit 1
-# fi
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root" 
+   exit 1
+fi
 
 # require_command () {
 #     type "$1" &> /dev/null || { echo "Command $1 is missing. Install it e.g. with 'apt-get install $1'. Aborting." >&2; exit 1; }
@@ -32,16 +32,16 @@ echo -en 'travis_fold:end:script.prepare_qemu\\r\\n'
 echo ================================================
 echo == Building image : backup of some original files
 mount_image
-sudo mv ${MOUNT_POINT}/etc/rc.local ${MOUNT_POINT}/etc/rc.local.backup
-sudo mv ${MOUNT_POINT}/etc/ld.so.preload ${MOUNT_POINT}/etc/ld.so.preload.backup
-sudo touch ${MOUNT_POINT}/etc/ld.so.preload
-sudo chmod +x ${MOUNT_POINT}/etc/ld.so.preload
+mv ${MOUNT_POINT}/etc/rc.local ${MOUNT_POINT}/etc/rc.local.backup
+mv ${MOUNT_POINT}/etc/ld.so.preload ${MOUNT_POINT}/etc/ld.so.preload.backup
+touch ${MOUNT_POINT}/etc/ld.so.preload
+chmod +x ${MOUNT_POINT}/etc/ld.so.preload
 unmount_image
 
 echo ================================================
 echo == Building image : stage 0 - copying files
 mount_image
-sudo cp --recursive --verbose pi-stage0/* "${MOUNT_POINT}"
+cp --recursive --verbose pi-stage0/* "${MOUNT_POINT}"
 
 echo ----
 ls -l ${MOUNT_POINT}/etc/build*
@@ -64,9 +64,9 @@ set +x
 echo ================================================
 echo == Building image : restoring original files
 mount_image
-sudo rm ${MOUNT_POINT}/etc/rc.local ${MOUNT_POINT}/etc/ld.so.preload
-sudo mv ${MOUNT_POINT}/etc/rc.local.backup ${MOUNT_POINT}/etc/rc.local
-sudo mv ${MOUNT_POINT}/etc/ld.so.preload.backup ${MOUNT_POINT}/etc/ld.so.preload
+rm ${MOUNT_POINT}/etc/rc.local ${MOUNT_POINT}/etc/ld.so.preload
+mv ${MOUNT_POINT}/etc/rc.local.backup ${MOUNT_POINT}/etc/rc.local
+mv ${MOUNT_POINT}/etc/ld.so.preload.backup ${MOUNT_POINT}/etc/ld.so.preload
 unmount_image
 
 source cleanup.sh

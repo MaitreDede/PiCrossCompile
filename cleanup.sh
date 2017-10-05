@@ -10,11 +10,11 @@ set -o pipefail
 
 if cat /proc/mounts | grep ${MOUNT_POINT};
 then
-    sudo umount "${MOUNT_POINT}"
+    umount "${MOUNT_POINT}"
 fi
-if sudo kpartx -ls ${IMAGE_DEST} | grep loop;
+if kpartx -ls ${IMAGE_DEST} | grep loop;
 then
-    sudo kpartx -dvs ${IMAGE_DEST}
+    kpartx -dvs ${IMAGE_DEST}
 fi
 if [ -f ${IMAGE_TMPDL} ];
 then
