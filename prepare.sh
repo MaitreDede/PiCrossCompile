@@ -11,6 +11,10 @@ if [ ! -f ${QEMU_KERNEL} ]
 then
     wget ${QEMU_KERNEL_URL} -O ${QEMU_KERNEL}
 fi
+if [ -d ${IMAGE_PRISTINE} ]
+then
+    rm -Rf ${IMAGE_PRISTINE}
+fi
 if [ ! -f ${IMAGE_PRISTINE} ]
 then
     wget ${IMAGE_SOURCE} -O ${IMAGE_TMP}
