@@ -27,10 +27,10 @@ before_install:
   - docker --version
   - docker build . --tag=${DOCKER_TAG}
 script:
-  - if [ ! -f ${QEMU_KERNEL} ]; then; wget ${QEMU_KERNEL_URL} -O ${QEMU_KERNEL}; fi
-  - if [ ! -f ${IMAGE_PRISTINE} ]; then; \
-    wget ${IMAGE_SOURCE} -O ${IMAGE_TMP}; \
-    unzip -p ${IMAGE_TMP} `unzip -Z1 ${IMAGE_TMP}` > ${IMAGE_PRISTINE}; \
+  - if [ ! -f ${QEMU_KERNEL} ]; then wget ${QEMU_KERNEL_URL} -O ${QEMU_KERNEL}; fi
+  - if [ ! -f ${IMAGE_PRISTINE} ]; then \
+    wget ${IMAGE_SOURCE} -O ${IMAGE_TMP} && \
+    unzip -p ${IMAGE_TMP} `unzip -Z1 ${IMAGE_TMP}` > ${IMAGE_PRISTINE} && \
     rm ${IMAGE_TMP}; \
     fi
   - docker run --rm -it --privileged \
