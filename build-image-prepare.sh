@@ -3,11 +3,12 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-cp --verbose ${IMAGE_PRISTINE} ${IMAGE_DEST}
+echo Copying pristine ${IMAGE_PRISTINE} to ${IMAGE_DEST}
+cp ${IMAGE_PRISTINE} ${IMAGE_DEST}
 
-echo "Enlarging your image"
+echo "Enlarging your image..."
 dd if=/dev/zero bs=1M count=2048 >> ${IMAGE_DEST}
-echo "Fdisking ${IMAGE_DEST}"
+echo "Fdisking..."
 START_OF_ROOT_PARTITION=$(fdisk -l ${IMAGE_DEST} | tail -n 1 | awk '{print $2}')
 (echo 'p';                          # print
  echo 'd';                          # delete
