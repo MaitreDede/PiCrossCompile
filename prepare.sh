@@ -3,6 +3,10 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+if [ -d ${QEMU_KERNEL} ]
+then
+    rm -Rf ${QEMU_KERNEL}
+fi
 if [ ! -f ${QEMU_KERNEL} ]
 then
     wget ${QEMU_KERNEL_URL} -O ${QEMU_KERNEL}
