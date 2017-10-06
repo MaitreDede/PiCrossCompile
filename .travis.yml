@@ -28,4 +28,4 @@ before_install:
   - docker build . --tag=${DOCKER_TAG}
 script:
   - ./prepare.sh
-  - docker run --rm -it --privileged --volume ${TRAVIS_BUILD_DIR}:/data -w /data --env IMAGE_PRISTINE --env IMAGE_DEST "${DOCKER_TAG}" "build.sh"
+  - docker run --rm -it --privileged --volume ${TRAVIS_BUILD_DIR}:/data -w /data --env IMAGE_PRISTINE="${IMAGE_PRISTINE/$TRAVIS_BUILD_DIR/data}" --env IMAGE_DEST=${IMAGE_DEST/$TRAVIS_BUILD_DIR/data} "${DOCKER_TAG}" "build.sh"
