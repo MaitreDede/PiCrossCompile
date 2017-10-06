@@ -44,7 +44,7 @@ then
 else
     QEMU_OPTS=""
 fi
-qemu-system-arm -kernel ${QEMU_KERNEL} -cpu ${QEMU_CPU} -m 256 -M ${QEMU_MACHINE} -no-reboot -serial stdio -drive file=${IMAGE_DEST},format=raw -append 'root=/dev/sda2 earlyprintk rootfstype=ext4 console=ttyAMA0 rw' -net user,hostfwd=tcp::10022-:22,hostfwd=tcp::18069-:8069 -net nic ${QEMU_OPTS}
+${QEMU} -kernel ${QEMU_KERNEL} -cpu ${QEMU_CPU} -m 256 -M ${QEMU_MACHINE} -no-reboot -serial stdio -drive file=${IMAGE_DEST},format=raw -append 'root=/dev/sda2 earlyprintk rootfstype=ext4 console=ttyAMA0 rw' -net user,hostfwd=tcp::10022-:22,hostfwd=tcp::18069-:8069 -net nic ${QEMU_OPTS}
 
 echo ================================================
 echo == Building image : restoring original files
