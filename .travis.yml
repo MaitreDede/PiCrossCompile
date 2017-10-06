@@ -1,32 +1,45 @@
 sudo: required
 dist: trusty
 services:
-  - docker
-env:
-  global:
-    - QEMU_KERNEL_URL="https://github.com/dhruvvyas90/qemu-rpi-kernel/raw/master/kernel-qemu-4.4.13-jessie"
-    - QEMU_KERNEL=${TRAVIS_BUILD_DIR}/kernel-qemu
-    - QEMU=qemu-system-arm
-    - QEMU_CPU=arm1176
-    - QEMU_MACHINE=versatilepb
-    - QEMU_OPTS="-nographic -monitor none"
-    - IMAGE_SOURCE="http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2017-09-08/2017-09-07-raspbian-stretch-lite.zip"
-    - IMAGE_TMP=/tmp/raspbian.zip
-    - IMAGE_PRISTINE=${TRAVIS_BUILD_DIR}/raspbian-stretch-lite-pristine.img
-    - IMAGE_DEST=${TRAVIS_BUILD_DIR}/raspbian-target.img
-    - DOCKER_TAG="travis-dev"
-    - DOCKER_WORKDIR=/data
+- docker
 cache:
   directories:
-    - ${QEMU_KERNEL}
-    - ${IMAGE_PRISTINE}
+  - "${QEMU_KERNEL}"
+  - "${IMAGE_PRISTINE}"
+deploy:
+  provider: releases
+  api_key:
+    secure: JRwD421D4sIrIwUFcsb62FECYmg8bGTMwkjowio6Tv60zziufDg9wR7LSNjsrsi8Z3iQJoU6Jg6mYmNzgwQPpoH2oN8sooCvUUKBOWtJM9dlAox4su/adlY/2LUmW8G8pD2m+CbYbqa3AkmJmV+RBN+2f9bIBznxqDl/yXAhrujKw1Ay17threwjGliXjyfI8scCjvevtThjwisgPZYDjOSgUOUo8Xv5DwdK7Z3u2/YBuL7J8vfoqdnZ0wFAIa+fcrQ0pzx09gEeLMbD3yY5Acgi2L3ksYIKsXEgGqhZ2dSeQg+wkyzXIHNLcoeiU1mdQtpEQ43YXvuNR2QvjHuzMnPUM2mmAEbGz+x2zugVvnXkksgbfu95N4Q8LJES53zSQpO+WAWcSSuCJa5fZ14+tzF/yXFutQUIHYyByM24IdwObDwZhMbnCQz1SVWZn0GDLsNdFydB8u/ny2Bvhm7Ck5IpYFneU6oyXIuoJpT0whCIy1yPVt6IreBbLOTHWieAqJPmQZabP8pYFoc2s7SKVv7X1W/rJHKKUr3QdhCtMJ1GyepAFM7vI2INFIIvyaXucuZgvYhxsOYkFQzsm7nnOetd/8zwOjaZNnYzxdXnyEGkwb0/BAYqIc7THubpLWPIT4E/UPDh+hRTcm3kCDRF2tGphc6sNtTODcKcdsCUrVg=
+  file: ${IMAGE_DEST}
+  skip_cleanup: true
+  on:
+    repo: MaitreDede/PiCrossCompile
+    tags: true
+env:
+  global:
+  - QEMU_KERNEL_URL="https://github.com/dhruvvyas90/qemu-rpi-kernel/raw/master/kernel-qemu-4.4.13-jessie"
+  - QEMU_KERNEL=${TRAVIS_BUILD_DIR}/kernel-qemu
+  - QEMU=qemu-system-arm
+  - QEMU_CPU=arm1176
+  - QEMU_MACHINE=versatilepb
+  - QEMU_OPTS="-nographic -monitor none"
+  - IMAGE_SOURCE="http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2017-09-08/2017-09-07-raspbian-stretch-lite.zip"
+  - IMAGE_TMP=/tmp/raspbian.zip
+  - IMAGE_PRISTINE=${TRAVIS_BUILD_DIR}/raspbian-stretch-lite-pristine.img
+  - IMAGE_DEST=${TRAVIS_BUILD_DIR}/raspbian-target.img
+  - DOCKER_TAG="travis-dev"
+  - DOCKER_WORKDIR=/data
 before_install:
-  - sudo sh -c 'echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" > /etc/apt/sources.list.d/docker.list'
-  - sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-  - sudo apt-key update && sudo apt-get update
-  - sudo apt-get -qqy -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install docker-engine
-  - docker --version
-  - docker build . --tag=${DOCKER_TAG}
+- sudo sh -c 'echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" > /etc/apt/sources.list.d/docker.list'
+- sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+- sudo apt-key update && sudo apt-get update
+- sudo apt-get -qqy -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
+  install docker-engine
+- docker --version
+- docker build . --tag=${DOCKER_TAG}
 script:
-  - ./prepare.sh
-  - docker run --rm -it --privileged --volume ${TRAVIS_BUILD_DIR}:${DOCKER_WORKDIR} -w ${DOCKER_WORKDIR} --env IMAGE_PRISTINE="${IMAGE_PRISTINE/$TRAVIS_BUILD_DIR/$DOCKER_WORKDIR}" --env IMAGE_DEST=${IMAGE_DEST/$TRAVIS_BUILD_DIR/$DOCKER_WORKDIR} --env QEMU_KERNEL="${QEMU_KERNEL/$TRAVIS_BUILD_DIR/$DOCKER_WORKDIR}" --env QEMU --env QEMU_CPU --env QEMU_MACHINE --env QEMU_OPTS "${DOCKER_TAG}" "build.sh"
+- "./prepare.sh"
+- docker run --rm -it --privileged --volume ${TRAVIS_BUILD_DIR}:${DOCKER_WORKDIR}
+  -w ${DOCKER_WORKDIR} --env IMAGE_PRISTINE="${IMAGE_PRISTINE/$TRAVIS_BUILD_DIR/$DOCKER_WORKDIR}"
+  --env IMAGE_DEST=${IMAGE_DEST/$TRAVIS_BUILD_DIR/$DOCKER_WORKDIR} --env QEMU_KERNEL="${QEMU_KERNEL/$TRAVIS_BUILD_DIR/$DOCKER_WORKDIR}"
+  --env QEMU --env QEMU_CPU --env QEMU_MACHINE --env QEMU_OPTS "${DOCKER_TAG}" "build.sh"
