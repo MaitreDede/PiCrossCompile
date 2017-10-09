@@ -10,7 +10,7 @@ deploy:
   provider: releases
   api_key:
     secure: JRwD421D4sIrIwUFcsb62FECYmg8bGTMwkjowio6Tv60zziufDg9wR7LSNjsrsi8Z3iQJoU6Jg6mYmNzgwQPpoH2oN8sooCvUUKBOWtJM9dlAox4su/adlY/2LUmW8G8pD2m+CbYbqa3AkmJmV+RBN+2f9bIBznxqDl/yXAhrujKw1Ay17threwjGliXjyfI8scCjvevtThjwisgPZYDjOSgUOUo8Xv5DwdK7Z3u2/YBuL7J8vfoqdnZ0wFAIa+fcrQ0pzx09gEeLMbD3yY5Acgi2L3ksYIKsXEgGqhZ2dSeQg+wkyzXIHNLcoeiU1mdQtpEQ43YXvuNR2QvjHuzMnPUM2mmAEbGz+x2zugVvnXkksgbfu95N4Q8LJES53zSQpO+WAWcSSuCJa5fZ14+tzF/yXFutQUIHYyByM24IdwObDwZhMbnCQz1SVWZn0GDLsNdFydB8u/ny2Bvhm7Ck5IpYFneU6oyXIuoJpT0whCIy1yPVt6IreBbLOTHWieAqJPmQZabP8pYFoc2s7SKVv7X1W/rJHKKUr3QdhCtMJ1GyepAFM7vI2INFIIvyaXucuZgvYhxsOYkFQzsm7nnOetd/8zwOjaZNnYzxdXnyEGkwb0/BAYqIc7THubpLWPIT4E/UPDh+hRTcm3kCDRF2tGphc6sNtTODcKcdsCUrVg=
-  file: ${IMAGE_DEST}
+  file: ${IMAGE_DEST_ZIP}
   skip_cleanup: true
   on:
     repo: MaitreDede/PiCrossCompile
@@ -27,6 +27,7 @@ env:
   - IMAGE_TMP=/tmp/raspbian.zip
   - IMAGE_PRISTINE=${TRAVIS_BUILD_DIR}/raspbian-stretch-lite-pristine.img
   - IMAGE_DEST=${TRAVIS_BUILD_DIR}/raspbian-target.img
+  - IMAGE_DEST_ZIP=${TRAVIS_BUILD_DIR}/raspbian-target.zip
   - DOCKER_TAG="travis-dev"
   - DOCKER_WORKDIR=/data
 before_install:
@@ -43,3 +44,4 @@ script:
   -w ${DOCKER_WORKDIR} --env IMAGE_PRISTINE="${IMAGE_PRISTINE/$TRAVIS_BUILD_DIR/$DOCKER_WORKDIR}"
   --env IMAGE_DEST=${IMAGE_DEST/$TRAVIS_BUILD_DIR/$DOCKER_WORKDIR} --env QEMU_KERNEL="${QEMU_KERNEL/$TRAVIS_BUILD_DIR/$DOCKER_WORKDIR}"
   --env QEMU --env QEMU_CPU --env QEMU_MACHINE --env QEMU_OPTS "${DOCKER_TAG}" "build.sh"
+- zip --binary --compression-method bzip2 -9  ${IMAGE_DEST_ZIP} ${IMAGE_DEST}
