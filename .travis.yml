@@ -43,5 +43,5 @@ script:
 - docker run --rm -it --privileged --volume ${TRAVIS_BUILD_DIR}:${DOCKER_WORKDIR}
   -w ${DOCKER_WORKDIR} --env IMAGE_PRISTINE="${IMAGE_PRISTINE/$TRAVIS_BUILD_DIR/$DOCKER_WORKDIR}"
   --env IMAGE_DEST=${IMAGE_DEST/$TRAVIS_BUILD_DIR/$DOCKER_WORKDIR} --env QEMU_KERNEL="${QEMU_KERNEL/$TRAVIS_BUILD_DIR/$DOCKER_WORKDIR}"
-  --env QEMU --env QEMU_CPU --env QEMU_MACHINE --env QEMU_OPTS "${DOCKER_TAG}" "build.sh"
-- zip --binary --compression-method bzip2 -9  ${IMAGE_DEST_ZIP} ${IMAGE_DEST}
+  --env QEMU --env QEMU_CPU --env QEMU_MACHINE --env QEMU_OPTS --env IMAGE_DEST_ZIP "${DOCKER_TAG}" "build.sh"
+- zip --compression-method bzip2 -9  ${IMAGE_DEST_ZIP} ${IMAGE_DEST}
